@@ -123,6 +123,10 @@ def checkSchedulability(numTaskSets, targetUtilization, utilFunc, periodFunc, te
 #############################################################
 
 def audsleyFeasibility(taskSet):
+    """
+    Returns True if the given taskSet is schedulable under Audsley's optimal
+    fixed-priority assignment, else False.
+    """
     result = []
     for j in range(len(taskSet), 0, -1): # priority level j
         unassigned = True
@@ -137,12 +141,20 @@ def audsleyFeasibility(taskSet):
     return True
 
 def isFeasible(task, priority):
+    """
+    Returns True if a given task can feasibly be scheduled at the given priority,
+    else false.
+    """
     # CA + I A <= DA
     if (task.wcet + calInterference(task) <= task.relativeDeadline):
         return True
     return False
 
 def calInterference(task):
+    """
+    Calculates the total interference, which is the sum of "remaining"
+    interference and "created" interference, as defind in the original paper.
+    """
     return calRemainingInterference() + calCreatedInterference()
 
 def calRemainingInterference(task, timeInstant):
