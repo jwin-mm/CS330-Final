@@ -83,25 +83,36 @@ def generateRandomTaskSet(targetUtil, utilFunc, periodFunc):
 # Checking schedulability                                   #
 #############################################################
 
+
 def rmSchedulabilityTest(taskSet):
     """
-    Performs the simple utilization-based schedulability test for RM.
-
-    Only checks the total utilization sum against the U_lub bound.
-    Does not check per-task.
+    Performs an RTA schedulability test for RM, using the fixed-point
+    iterative algorithm we learned in class.
     """
-    num_tasks = len(taskSet)
-    u_lub =  num_tasks * (2 ** (1 / num_tasks) - 1) 
-    utilSum = 0
 
-    for task in taskSet: 
-        util = task.wcet / task.period
-        utilSum += util
+    for task in taskSet:
+        interferingTasks = [] # Will hold tasks whose RM priority is higher than Task
 
-        if (utilSum > u_lub):
-            return False
+        for t in taskSet:
+            if t is not task and t.period<task.period:
+                interferingTasks.append(t)
         
-    return True 
+        R_prev = task.wcet
+        while True:
+            interference = sum(math.ceil(R_prev / t.period) * t.wcet for t in interferingTasks)
+            R_next = task.wcet + interference
+            
+            if R_next == R_prev:
+                break  # Fixed point reached
+            if R_next > task.relativeDeadline:
+                return False  # Task fails to meet its deadline
+            R_prev = R_next
+        
+        if R_next > task.relativeDeadline:
+            return False
+    
+    return True
+
 
 
 def dmSchedulabilityTest(taskSet):
@@ -111,7 +122,12 @@ def dmSchedulabilityTest(taskSet):
     """
 
     for task in taskSet:
-        interferingTasks = [t for t in taskSet if t is not task]
+        interferingTasks = [] # Will hold tasks whose DM priority is higher than Task
+
+        for t in taskSet:
+            if t is not task and t.relativeDeadline<task.relativeDeadline:
+                interferingTasks.append(t)
+        
         R_prev = task.wcet
         while True:
             interference = sum(math.ceil(R_prev / t.period) * t.wcet for t in interferingTasks)
@@ -155,7 +171,7 @@ def checkSchedulability(numTaskSets, targetUtilization, utilFunc, periodFunc, te
 
 def performTests(numTests):
     utilizationVals = []
-    for i in range(100):
+    for i in range(90):
         val = 0.01 + i * 0.01
         utilizationVals.append(val)
 
@@ -186,7 +202,7 @@ def plotResults(utilVals, results):
 
     for (styleId, label) in enumerate(results):
         yvals = results[label]
-        plt.plot(utilVals, yvals, LINE_STYLE[styleId], label=label)
+        plt.plot(utilVals, yvals, LINE_STYLE[styleId], label=label, markersize=1)
 
         # print("Results for {0}: {1}".format(label, yvals))
 
