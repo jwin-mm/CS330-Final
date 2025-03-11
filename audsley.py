@@ -16,12 +16,15 @@ def audsleyFeasibility(taskSet):
     fixed-priority assignment, else False.
     """
     result = []
+
+    tasks = taskSet.copy() # So we can safely remove tasks
+
     for j in range(len(taskSet), 0, -1): # priority level j
         unassigned = True
-        for task in taskSet:
+        for task in tasks:
             if isFeasible(task, j):
                 result.append(task)
-                taskSet.remove(task)
+                tasks.remove(task)
                 unassigned = False 
         if (unassigned):
             return False
