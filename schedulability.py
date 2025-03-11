@@ -30,6 +30,8 @@ shortPeriodFunc = lambda : getUniformValue(3, 33)
 longPeriodFunc = lambda : getUniformValue(50, 250)
 choicePeriodFunc = lambda : random.choice([250, 500, 750, 1000, 1500, 2000, 6000])
 
+offsetFunc = lambda : getUniformValue(0, 10)
+
 #############################################################
 # Task set generation                                       #
 #############################################################
@@ -56,10 +58,10 @@ def generateRandomTaskSet(targetUtil, utilFunc, periodFunc):
         if (util + utilSum > targetUtil):
             util = targetUtil - utilSum
 
-        offset = 0
+        offset = offsetFunc()
         period = periodFunc()
-        relativeDeadline = period
         wcet = util * period
+        relativeDeadline = getUniformValue(wcet, period)
 
         # Build a dictionary for the task parameters
         taskDict = {}
@@ -101,6 +103,32 @@ def rmSchedulabilityTest(taskSet):
         
     return True 
 
+
+def dmSchedulabilityTest(taskSet):
+    """
+    Performs an RTA schedulability test for DM, using the fixed-point
+    iterative algorithm we learned in class.
+    """
+
+    for task in taskSet:
+        interferingTasks = [t for t in taskSet if t is not task]
+        R_prev = task.wcet
+        while True:
+            interference = sum(math.ceil(R_prev / t.period) * t.wcet for t in interferingTasks)
+            R_next = task.wcet + interference
+            
+            if R_next == R_prev:
+                break  # Fixed point reached
+            if R_next > task.relativeDeadline:
+                return False  # Task fails to meet its deadline
+            R_prev = R_next
+        
+        if R_next > task.relativeDeadline:
+            return False
+    
+    return True
+
+
 def checkSchedulability(numTaskSets, targetUtilization, utilFunc, periodFunc, testFunc):
     """
     Generates numTaskSets task sets using a given utilization-generation function
@@ -127,23 +155,23 @@ def checkSchedulability(numTaskSets, targetUtilization, utilFunc, periodFunc, te
 
 def performTests(numTests):
     utilizationVals = []
-    for i in range(21):
-        val = 0.65 + i * 0.01
+    for i in range(100):
+        val = 0.01 + i * 0.01
         utilizationVals.append(val)
 
     results = {}
-    results["light"] = []
-    results["medlight"] = []
-    results["medium"] = []
+    results["rm"] = []
+    results["dm"] = []
+    results["audsley"] = []
 
     for util in utilizationVals:
-        lightResult = checkSchedulability(numTests, util, lightUtilFunc, shortPeriodFunc, rmSchedulabilityTest)
-        medLightResult = checkSchedulability(numTests, util, mediumLightUtilFunc, shortPeriodFunc, rmSchedulabilityTest)
-        mediumResult = checkSchedulability(numTests, util, mediumUtilFunc, shortPeriodFunc, rmSchedulabilityTest)
+        rmResult = checkSchedulability(numTests, util, mediumLightUtilFunc, shortPeriodFunc, rmSchedulabilityTest)
+        dmResult = checkSchedulability(numTests, util, mediumLightUtilFunc, shortPeriodFunc, dmSchedulabilityTest)
+        audsleyResult = checkSchedulability(numTests, util, mediumUtilFunc, shortPeriodFunc, audsleyFeasibility)
 
-        results["light"].append(lightResult)
-        results["medlight"].append(medLightResult)
-        results["medium"].append(mediumResult)
+        results["rm"].append(rmResult)
+        results["dm"].append(dmResult)
+        results["audsley"].append(audsleyResult)
 
     return utilizationVals, results
 
