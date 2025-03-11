@@ -1,0 +1,71 @@
+{
+    "startTime": 0,
+    "endTime": 10,
+    "taskset": [
+        {
+            "taskId": 1,
+            "period": -1,
+            "wcet": 1,
+            "deadline": 2,
+            "offset": 0
+        },
+        {
+            "taskId": 2,
+            "period": -1,
+            "wcet": 4,
+            "deadline": 10,
+            "offset": 0
+        },
+        {
+            "taskId": 3,
+            "period": -1,
+            "wcet": 3,
+            "deadline": 4,
+            "offset": 0
+        },
+        {
+            "taskId": 4,
+            "period": -1,
+            "wcet": 2,
+            "deadline": 5,
+            "offset": 0
+        }
+    ],
+    "scheduleOutput":
+    {
+        "startTime": 0,
+        "endTime": 10,
+        "intervals": [
+            {
+                "timeInstant": 0,
+                "taskId": 1,
+                "jobId": 1,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 1,
+                "taskId": 3,
+                "jobId": 1,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 4,
+                "taskId": 4,
+                "jobId": 1,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 6,
+                "taskId": 2,
+                "jobId": 1,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 10,
+                "taskId": 0,
+                "jobId": -1,
+                "didPreempt": false
+            }
+        ]
+    }
+}

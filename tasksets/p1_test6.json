@@ -1,0 +1,130 @@
+{
+    "startTime": 0,
+    "endTime": 12,
+    "taskset": [
+        {
+            "taskId": 1,
+            "period": 6,
+            "wcet": 2,
+            "deadline": 6,
+            "offset": 0
+        },
+        {
+            "taskId": 2,
+            "period": 3,
+            "wcet": 1,
+            "deadline": 2,
+            "offset": 1
+        },
+        {
+            "taskId": 3,
+            "period": 10,
+            "wcet": 1.5,
+            "deadline": 10,
+            "offset": 2
+        }
+    ],
+    "releaseTimes": [
+        {
+            "timeInstant": 0,
+            "taskId": 1
+        },
+        {
+            "timeInstant": 6,
+            "taskId": 1
+        },
+        {
+            "timeInstant": 1,
+            "taskId": 2
+        },
+        {
+            "timeInstant": 4,
+            "taskId": 2
+        },
+        {
+            "timeInstant": 7,
+            "taskId": 2
+        },
+        {
+            "timeInstant": 10,
+            "taskId": 2
+        },
+        {
+            "timeInstant": 2,
+            "taskId": 3
+        }
+    ],
+    "scheduleOutput":
+    {
+        "startTime": 0,
+        "endTime": 12,
+        "intervals": [
+            {
+                "timeInstant": 0,
+                "taskId": 1,
+                "jobId": 1,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 1,
+                "taskId": 2,
+                "jobId": 1,
+                "didPreempt": true
+            },
+            {
+                "timeInstant": 2,
+                "taskId": 1,
+                "jobId": 1,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 3,
+                "taskId": 3,
+                "jobId": 1,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 4,
+                "taskId": 2,
+                "jobId": 2,
+                "didPreempt": true
+            },
+            {
+                "timeInstant": 5,
+                "taskId": 3,
+                "jobId": 1,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 5.5,
+                "taskId": 0,
+                "jobId": -1,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 7,
+                "taskId": 2,
+                "jobId": 3,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 8,
+                "taskId": 1,
+                "jobId": 2,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 10.5,
+                "taskId": 2,
+                "jobId": 4,
+                "didPreempt": false
+            },
+            {
+                "timeInstant": 11.5,
+                "taskId": 0,
+                "jobId": -1,
+                "didPreempt": false
+            }
+        ]
+    }
+}
