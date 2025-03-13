@@ -72,3 +72,11 @@ def calCreatedInterference(task):
     The created interference on a release of t_i at time t, due to higher priority tasks
     released in the interval [t, t + D_i),
     """
+
+def calStabilisationTime(task, taskSet):
+    """
+    The initial stabilisation time, S_j, of task t_j, is the time after which the execution
+    of the task set repeats exactly every P_j with respect to all tasks within the task set
+    """
+    # o_max = 
+    # stableTime = o_max // task.period
