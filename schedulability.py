@@ -171,7 +171,7 @@ def checkSchedulability(numTaskSets, targetUtilization, utilFunc, periodFunc, te
 
 def performTests(numTests):
     utilizationVals = []
-    for i in range(90):
+    for i in range(100):
         val = 0.01 + i * 0.01
         utilizationVals.append(val)
 
